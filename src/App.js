@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react'
+import { CKEditor } from '@ckeditor/ckeditor5-react'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+
+import { config } from './editorConfig'
+
+let posts = JSON.parse(localStorage.posts);
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const TextEditor = () => {
+    const [body, setBody] = useState('')
+
+    ClassicEditor.defaultConfig = config
+    // console.log('notederror');
+
+    const handleSubmit = (e) => {
+      e.preventDefault()
+      posts.push(body);
+      localStorage['posts'] = JSON.stringify(posts);
+    }
+
+    return (
+      <form onSubmit={handleSubmit}>
+        <CKEditor
+          editor={ClassicEditor}
+          config={config}
+          onChange={(event, editor) => {
+            const data = editor.getData()
+            setBody(data)
+          }}
+        />
+        <button type='submit'>Submit</button>
+      </form>
+    )
+  }
+  return <TextEditor />;
 }
 
 export default App;
