@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import parse from 'html-react-parser'
+import "./App.css"
 
 import { config } from './editorConfig'
 
@@ -11,7 +13,7 @@ function App() {
     const [body, setBody] = useState('')
 
     ClassicEditor.defaultConfig = config
-    // console.log('notederror');
+    // console.log('note');
 
     const handleSubmit = (e) => {
       e.preventDefault()
@@ -20,17 +22,28 @@ function App() {
     }
 
     return (
-      <form onSubmit={handleSubmit}>
-        <CKEditor
-          editor={ClassicEditor}
-          config={config}
-          onChange={(event, editor) => {
-            const data = editor.getData()
-            setBody(data)
-          }}
-        />
-        <button type='submit'>Submit</button>
-      </form>
+      <div className="App">
+        <div className="Editor">
+          <form onSubmit={handleSubmit}>
+            <CKEditor
+              editor={ClassicEditor}
+              data={body}
+              config={config}
+              onChange={(event, editor) => {
+                const data = editor.getData()
+                setBody(data)
+              }}
+            />
+
+            <button type='submit'>Submit</button>
+
+          </form>
+        </div>
+        <div className="Preview">
+          <h2>Content</h2>
+          <p>{parse(body)}</p>
+        </div>
+      </div>
     )
   }
   return <TextEditor />;
